@@ -6,9 +6,9 @@
  */
 
 // Pins for RGB LED
-int redPin = 3;
-int greenPin = 5;
-int bluePin = 6;
+int redPin = 0;
+int greenPin = 2;
+int bluePin = 3;
 
 // Pins for Potentiometers
 int pot1Pin = 7;
@@ -24,13 +24,13 @@ int IR4Pin = 0;
 
 // Pins for Motor Driver
 int motorPWMPin = 8;
-int motorIN_1 = 8;
+int motorIN_1 = 9;
 int motorIN_2 = 10;
 
 // Pin for Servo
 //int servoPWMPin = 9;
 
-// Pin for Switch
+// Pin for Switch 
 //int switchPin = 15;
 
 // Analog Variables
@@ -78,11 +78,11 @@ void setup() {
   pinMode(motorPWMPin, OUTPUT);
   pinMode(motorIN_1, OUTPUT);
   pinMode(motorIN_2, OUTPUT);
-  pinMode(servoPWMPin, OUTPUT);
-  pinMode(switchPin, INPUT);
+  //pinMode(servoPWMPin, OUTPUT);
+  //pinMode(switchPin, INPUT);
   myMotor.enable(); //turn on the motor
   setColor(0, 0, 255); //turn LED blue
-  delay(600); //wait 0.6 seconds to let the sensors reach steady state
+  delay(2000); //wait 0.6 seconds to let the sensors reach steady state
   calibrate(); // calibrate the sensors
   setColor(0, 255, 0); //turn LED green
 }
