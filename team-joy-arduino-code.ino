@@ -23,15 +23,15 @@ int IR3Pin = 1;
 int IR4Pin = 0;
 
 // Pins for Motor Driver
-int motorPWMPin = 11;
-int motorIN_1 = 12;
-int motorIN_2 = 13;
+int motorPWMPin = 8;
+int motorIN_1 = 8;
+int motorIN_2 = 10;
 
 // Pin for Servo
-int servoPWMPin = 9;
+//int servoPWMPin = 9;
 
 // Pin for Switch
-int switchPin = 15;
+//int switchPin = 15;
 
 // Analog Variables
 
