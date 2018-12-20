@@ -45,7 +45,13 @@ int IRDifference = 0;
 int switchVal = 0;
 
 // Servo Variables
-
+int counter = 1;
+int limit = 60;
+int stepDelay = 10;
+int cycleDelay = 1500;
+int servoDirection = 1;
+int prevDirection = 0;
+int waitCounter = 0;
 
 class DCMotor{
   int pwmPin;
@@ -86,6 +92,7 @@ void setup() {
   pinMode(motorIN_2, OUTPUT);
   pinMode(servoPWMPin, OUTPUT);
   pinMode(switchPin, INPUT);
+  Serial.begin(9600);
   myServo.attach(servoPWMPin);
   myMotor.enable(); //turn on the motor
   setColor(0, 0, 1); //turn LED blue
@@ -105,10 +112,12 @@ void loop(){
     if (digitalRead(switchPin) == HIGH){
         myMotor.disable();
     }
-    delay(500);
+    for (int i = 0; i < 50; i++){
+      servo_take_step();
+    }
   }
   setColor(0, 1, 0); //turn LED green
-  delay(5);
+  servo_take_step();
 }
 
 void setColor(int redValue, int greenValue, int blueValue) {
@@ -118,7 +127,25 @@ void setColor(int redValue, int greenValue, int blueValue) {
 }
 
 void servo_take_step(){
-  
+  myServo.write((counter + 20));
+  delay(stepDelay);
+  if (counter == limit || counter == 0){
+    if (waitCounter == 150){
+      if (counter == 60){
+        servoDirection = -1;
+      }
+      if (counter == 0){
+        servoDirection = 1;
+      }
+      waitCounter = 0;
+    }
+    else{
+      servoDirection = 0;
+    }
+    waitCounter = waitCounter + 1;
+  }
+  counter = counter + servoDirection;
+  Serial.println(counter);
 }
 
 void calibrate(){
