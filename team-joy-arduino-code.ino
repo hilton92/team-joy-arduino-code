@@ -4,11 +4,13 @@
  * Developed for ME 576
  * Core System Code
  */
+#include <Servo.h>
+
 
 // Pins for RGB LED
-int redPin = 0;
+int redPin = 3;
 int greenPin = 2;
-int bluePin = 3;
+int bluePin = 0;
 
 // Pins for Potentiometers
 int pot1Pin = 7;
@@ -28,19 +30,22 @@ int motorIN_1 = 9;
 int motorIN_2 = 10;
 
 // Pin for Servo
-//int servoPWMPin = 9;
+int servoPWMPin = 6;
 
 // Pin for Switch 
-//int switchPin = 15;
+int switchPin = 12;
 
 // Analog Variables
-
 int potSum = 0;
 int basePotSum = 0;
 int IRSum = 0;
 int baseIRSum = 0;
 int potDifference = 0;
 int IRDifference = 0;
+int switchVal = 0;
+
+// Servo Variables
+
 
 class DCMotor{
   int pwmPin;
@@ -68,6 +73,7 @@ class DCMotor{
 };
 
 DCMotor myMotor(motorPWMPin, motorIN_1, motorIN_2); //create motor object
+Servo myServo;
 
 
 void setup() {
@@ -78,30 +84,41 @@ void setup() {
   pinMode(motorPWMPin, OUTPUT);
   pinMode(motorIN_1, OUTPUT);
   pinMode(motorIN_2, OUTPUT);
-  //pinMode(servoPWMPin, OUTPUT);
-  //pinMode(switchPin, INPUT);
+  pinMode(servoPWMPin, OUTPUT);
+  pinMode(switchPin, INPUT);
+  myServo.attach(servoPWMPin);
   myMotor.enable(); //turn on the motor
-  setColor(0, 0, 255); //turn LED blue
-  delay(2000); //wait 0.6 seconds to let the sensors reach steady state
+  setColor(0, 0, 1); //turn LED blue
+  delay(2000); //wait 2 seconds to let the sensors reach steady state
   calibrate(); // calibrate the sensors
-  setColor(0, 255, 0); //turn LED green
+  setColor(0, 1, 0); //turn LED green
 }
 
 void loop(){
-  potSum = analogRead(pot1Pin) + analogRead(pot2Pin) + analogRead(pot3Pin) + analogRead(pot4Pin);
+  potSum = analogRead(pot1Pin) + analogRead(pot3Pin) + analogRead(pot4Pin);
   potDifference = abs(potSum - basePotSum);
   IRSum = analogRead(IR1Pin) + analogRead(IR2Pin) + analogRead(IR3Pin) + analogRead(IR4Pin);
   IRDifference = abs(IRSum - baseIRSum);
-  if (potDifference > 8 || IRDifference > 300){
-    setColor(255, 0, 0);
-    myMotor.disable();
+  //Serial.println(IRDifference);
+  if (potDifference > 30 || IRDifference > 260){
+    setColor(1, 0, 0);
+    if (digitalRead(switchPin) == HIGH){
+        myMotor.disable();
+    }
+    delay(500);
   }
+  setColor(0, 1, 0); //turn LED green
+  delay(5);
 }
 
 void setColor(int redValue, int greenValue, int blueValue) {
-  analogWrite(redPin, redValue);
-  analogWrite(greenPin, greenValue);
-  analogWrite(bluePin, blueValue);
+  digitalWrite(redPin, redValue);
+  digitalWrite(greenPin, greenValue);
+  digitalWrite(bluePin, blueValue);
+}
+
+void servo_take_step(){
+  
 }
 
 void calibrate(){
@@ -113,6 +130,6 @@ void calibrate(){
   int IR_2 = analogRead(IR2Pin);
   int IR_3 = analogRead(IR3Pin);
   int IR_4 = analogRead(IR4Pin);
-  basePotSum = Pot_1 + Pot_2 + Pot_3 + Pot_4;
+  basePotSum = Pot_1 + Pot_3 + Pot_4;
   baseIRSum = IR_1 + IR_2 + IR_3 + IR_4;
 }
