@@ -1,2 +1,2 @@
 # team-joy-arduino-code
-Arduino Code ME 576
+Arduino Code for a product design class project
